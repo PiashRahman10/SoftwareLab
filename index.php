@@ -9,7 +9,7 @@ include('db.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Solution Consultancy Firm</title>
+    <title>Alliance Consultancy Firm</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
