@@ -53,18 +53,18 @@ $result = mysqli_query($conn, $query);
     <!-- xtra team link start -->
     <style>
         /* Custom animation for lawyer cards */
-        .lawyer-card {
+        .arb-card {
             position: relative;
             overflow: hidden;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
-        .lawyer-card:hover {
+        .arb-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         /* Increase circle size, border, and padding for images */
-        .lawyer-image {
+        .arb-image {
             width: 200px;
             height: 200px;
             object-fit: cover;
@@ -188,9 +188,9 @@ $result = mysqli_query($conn, $query);
                         $image = 'arbpic/' . $row['pic']; // Adjusted image path
                         ?>
                         <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="lawyer-card team-item text-center rounded overflow-hidden">
+                            <div class="arb-card team-item text-center rounded overflow-hidden">
                                 <div class="team-img position-relative">
-                                    <img class="lawyer-image img-fluid" src="<?php echo $image; ?>" alt="<?php echo $name; ?>">
+                                    <img class="arb-image img-fluid" src="<?php echo $image; ?>" alt="<?php echo $name; ?>">
                                 </div>
                                 <div class="p-4">
                                     <h5 class="mb-0"><?php echo $name; ?></h5>
