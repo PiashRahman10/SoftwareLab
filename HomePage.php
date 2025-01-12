@@ -93,7 +93,7 @@ include("db.php");
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="Homepage.php" class="nav-item nav-link active">Home</a>
             <a href="aboutus.php" class="nav-item nav-link ">About</a>
-            <a href="others.php" class="nav-item nav-link">Service Information</a>
+            
             <a href="mediator.php" class="nav-item nav-link">Mediator</a>
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
             <a href="querry.php" class="nav-item nav-link">Query</a>
@@ -104,6 +104,7 @@ include("db.php");
                     <a href="Arbitration.php" class="dropdown-item">Arbitration Case File</a>
                     <a href="mediation_proposal.php" class="dropdown-item">Mediation Proposal</a>
                     <a href="mediation.php" class="dropdown-item">Mediation Case File</a>
+                    <a href="others.php" class="dropdown-item">Service Information</a>
                     <a href="lawyer.php" class="dropdown-item">Lawyers Info</a>
                     
                 </div>
