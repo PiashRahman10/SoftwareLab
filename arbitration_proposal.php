@@ -131,7 +131,7 @@
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
-                    <a href="Arbitration_proposal.php" class="dropdown-item">Arbitration Proposal</a>
+                    <a href="Arbitration_proposal.php" class="dropdown-item active">Arbitration Proposal</a>
                     <a href="Arbitration.php" class="dropdown-item">Arbitration Case File</a>
                     <a href="mediation_proposal.php" class="dropdown-item">Mediation Proposal</a>
                     <a href="mediation.php" class="dropdown-item">Mediation Case File</a>
@@ -272,13 +272,8 @@
                     <h5 class="text-light mb-4">Address</h5>
                     <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Baridhara, Gulshan-2, Dhaka-1212</p>
                     <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+88 01780337775</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>alliance@gmail.com</p>
-                    <div class="d-flex pt-2">
-                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-linkedin-in"></i></a>
-                    </div>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>alliance247@gmail.com</p>
+                    
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-light mb-4">Services</h5>
@@ -298,11 +293,12 @@
                 </div>
                 <!-- most right text area-->
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-light mb-4">Newsletter</h5>
-                    <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
-                    <div class="position-relative mx-auto" style="max-width: 400px;">
-                        <input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
-                        <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
+                    <h5 class="text-light mb-4">Follow Us</h5>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <!-- end of most right text area-->
