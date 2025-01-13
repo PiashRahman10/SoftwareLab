@@ -120,14 +120,14 @@ if(isset($_POST['submit2'])){
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="Homepage.php" class="nav-item nav-link active">Home</a>
+            <a href="Homepage.php" class="nav-item nav-link ">Home</a>
             <a href="aboutus.php" class="nav-item nav-link ">About</a>
             
             <a href="mediator.php" class="nav-item nav-link">Mediator</a>
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
             <a href="querry.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Service</a>
+                <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
                     <a href="Arbitration_proposal.php" class="dropdown-item">Arbitration Proposal</a>
                     <a href="Arbitration.php" class="dropdown-item">Arbitration Case File</a>

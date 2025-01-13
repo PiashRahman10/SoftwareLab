@@ -127,8 +127,8 @@ $result = mysqli_query($conn, $query);
             <a href="Homepage.php" class="nav-item nav-link">Home</a>
             <a href="aboutus.php" class="nav-item nav-link ">About</a>
             
-            <a href="mediator.php" class="nav-item nav-link">Mediator</a>
-            <a href="arbitrator.php" class="nav-item nav-link active">Arbitrator</a>
+            <a href="mediator.php" class="nav-item nav-link active">Mediator</a>
+            <a href="arbitrator.php" class="nav-item nav-link ">Arbitrator</a>
             <a href="querry.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Service</a>

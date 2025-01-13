@@ -121,10 +121,10 @@ if (isset($_GET['id'])) {
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="Homepage.php" class="nav-item nav-link active">Home</a>
+            <a href="Homepage.php" class="nav-item nav-link ">Home</a>
             <a href="aboutus.php" class="nav-item nav-link ">About</a>
             
-            <a href="mediator.php" class="nav-item nav-link">Mediator</a>
+            <a href="mediator.php" class="nav-item nav-link active">Mediator</a>
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
             <a href="querry.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
