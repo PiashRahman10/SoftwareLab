@@ -28,45 +28,6 @@ if (isset($_SESSION['useremail'])) {
     }
 }
 
-// Check if form is submitted
-if (isset($_POST['submit'])) {
-    $description = mysqli_real_escape_string($conn, $_POST['content']);
-    $date = mysqli_real_escape_string($conn, $_POST['current_date']);
-   
-    // Handle file upload
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
-        $targetDir = "uploads/"; // Directory where the image will be stored
-        $targetFile = $targetDir . basename($_FILES["profile_picture"]["name"]);
-        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-        // Check if the file is an image
-        $check = getimagesize($_FILES["profile_picture"]["tmp_name"]);
-        if ($check !== false) {
-            // Move the uploaded file to the target directory
-            if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
-                // Insert the form data and file path into the database
-                $sqlinstitution = "INSERT INTO community (fullname, email,date,description,file ) 
-                                 VALUES ('$name', '$userprofile','$date', '$description', '$targetFile')"; 
-
-                // Check if the query is successful
-                if (mysqli_query($conn, $sqlinstitution)) {
-                    echo '<script>
-                    window.location.href="query.php"; 
-                    alert(" Posted. now refresh the page ")
-                    </script>';
-                } else {
-                    echo "Error: " . mysqli_error($conn);
-                }
-            } else {
-                echo "Sorry, there was an error uploading your file.";
-            }
-        } else {
-            echo "File is not an image.";
-        }
-    } else {
-        echo "No file uploaded or there was an upload error.";
-    }
-}
 // Check if delete button is clicked
 if (isset($_POST['delete'])) {
     $emailToDelete = mysqli_real_escape_string($conn, $_POST['email']);
@@ -81,7 +42,6 @@ if (isset($_POST['delete'])) {
         echo "Error deleting record: " . mysqli_error($conn);
     }
 }
-
 
 ?>
 
@@ -283,30 +243,17 @@ if (isset($_POST['delete'])) {
 
    
 
-    <div class="main-content">
-    <div class="row">
-        <div class="col-lg-4" >
-            <div class="create-post-card" style=" position: fixed;">
-                <h4>Create a Post</h4>
-                <form action="#" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="content" class="form-label">Post Content</label>
-                        <textarea class="form-control" id="content" name="content" rows="2" required style="width: 300px;"></textarea>
-                    </div>
-                    <label for="profile_picture" class="form-label">Upload Post Image </label>
-                    <div class="mb-3">
-                        <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
-                    </div>
-                    <?php if (isset($_SESSION['useremail'])): ?>
-                        <input type="hidden" id="current_date" name="current_date">
-                        <button type="submit" name="submit" class="btn btn-primary">Create Post</button>
-                        <?php else: ?>
-                            <?php echo'For Resgistared Person' ?>  
-                            <?php endif; ?>
-                </form>
+
+<div class="container light-style flex-grow-1 container-p-y">
+        <h4 class=""></h4>
+        <div class="row">
+            
+            <div class="col-lg-3 " style="position:fixed">
+                <?php include("Profile_side_nabbar.php"); ?>
             </div>
-        </div>
-        <div class="col-lg-8">
+
+            <!--Post content part -->
+            <div class="col-lg-9 " style="margin-top: 100px; margin-left:375px; ">
                                             <?php
                                               
                                               // SQL query to fetch events
@@ -316,24 +263,32 @@ if (isset($_POST['delete'])) {
                                                             ORDER BY  id DESC; ";
                                               $result = $conn->query($sql);
                       
-                                              if ($result->num_rows > 0) {
+                                            if ($result->num_rows > 0) {
                                                
                                                     // Loop through the results and display each event
                                                   // Inside the while loop where you display the posts
-                                                  while ($row = $result->fetch_assoc()) {
+                                                while ($row = $result->fetch_assoc()) {
                                                    
+                                                    if ($userprofile == $row["email"]) {  // Display delete button for logged-in user
                                                         echo '<div class="post-card p-2">
                                                                 <div class="card-body">
                                                                     <div class="user-info">
                                                                         <img src="' . $row["profilepic"] . '" alt="Avatar" class="user-avatar">
                                                                         <strong>' . $row["fullname"] . '</strong>
+                                                                        <form method="post" action="" style="display:inline;">
+                                                                            <input type="hidden" name="email" value="' . $row["email"] . '">
+                                                                            <input type="hidden" name="id" value="' . $row["id"] .'">
+                                                                            <button class="btn delete btn-danger btn-sm" type="submit" name="delete" style="margin-left:220px;">Delete</button>
+                                                                        </form>
                                                                     </div>
                                                                     <p class="post-time">' . $row["date"] . '</p>
                                                                     <img src="' . $row["file"] . '" alt="Post Image" class="post-image">
                                                                     <p class="post-content">' . $row["description"] . '</p>
                                                                 </div>
                                                             </div>';
-                                                    
+                                                    } else {
+                                                        echo 'You have not posted yet';
+                                                    }
                                                 }
                                                 
  
@@ -344,13 +299,12 @@ if (isset($_POST['delete'])) {
                                               }
                       
                                               mysqli_close($conn);  
-                                            ?>            
-                      
+                                            ?> 
+            </div>
+            <!--Post content part -->
+
         </div>
     </div>
-</div>
-
-   
    
    
 
