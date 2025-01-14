@@ -1,34 +1,72 @@
-<!-- Php code start -->
+<?php 
+    session_start();
+    include("db.php");
 
-<?php
-   include('db.php');
+    $userprofile = $_SESSION['useremail'];
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+    $sql = "SELECT * FROM user WHERE email='$userprofile'"; 
+    $result = $conn->query($sql);
+    $data = mysqli_fetch_assoc($result);
+
+    // Initialize SQL query for searching arbitration proposals
+    $sql2 = "SELECT * FROM arbitration_proposal "; 
+    $result2 = $conn->query($sql2);
+
+    // Check if the search button is clicked
+    if (isset($_POST['search'])) {
+        $caseNumber = $_POST['caseNumber'] ?? '';
+        $defendent = $_POST['defendent'] ?? ''; // Correct form field name
+        $type = $_POST['type'] ?? '';
+
+        // Build SQL query with conditions only if values are provided
+        $conditions = [];
+
+        if (!empty($type)) {
+            $conditions[] = "status LIKE ?";
+        }
+        if (!empty($caseNumber)) {
+            $conditions[] = "casenumber = ?";
+        }
+        if (!empty($defendent)) {
+            $conditions[] = "person2 LIKE ?";
+        }
+
+        // Prepare the final SQL query with dynamic WHERE conditions
+        if (count($conditions) > 0) {
+            $sql = "SELECT * FROM arbitration_proposal WHERE  " . implode(' OR ', $conditions);
+        } else {
+            $sql = "SELECT * FROM arbitration_proposal WHERE status='pending'";
+        }
+
+        // Prepare the statement
+        $stmt = $conn->prepare($sql);
+
+        // Bind the values dynamically
+        $bindTypes = '';
+        $bindValues = [];
+
+        if (!empty($type)) {
+            $bindTypes .= 's'; // Add string type for status
+            $bindValues[] = "%" . $type . "%"; // Add the type with wildcards
+        }
+        if (!empty($defendent)) {
+            $bindTypes .= 's'; // Add string type for defendant
+            $bindValues[] = "%" . $defendent . "%"; // Add the defendant with wildcards
+        }
+        if (!empty($caseNumber)) {
+            $bindTypes .= 's'; // Add string type for case number
+            $bindValues[] = $caseNumber; // Add the case number directly
+        }
+
+        if (count($bindValues) > 0) {
+            $stmt->bind_param($bindTypes, ...$bindValues);  // Bind dynamically
+        }
+
+        // Execute the query
+        $stmt->execute();
+        $result = $stmt->get_result();
     }
-//insert proposal into database
-if(isset($_POST['submit1'])){
-    $issues=$_POST['issues'];
-    $person1=$_POST['person1'];
-    $email1=$_POST['email1'];
-    $phone1 = $_POST['phone1'];
-    $person2=$_POST['person2'];
-    $email2=$_POST['email2'];
-    $phone2 = $_POST['phone2'];
-
-    $sql = "INSERT INTO mediation_proposal (issues,person1,email1,phone1,person2,email2,phone2,status)
-    VALUES('$issues','$person1','$email1','$phone1','$person2','$email2','$phone2','pending')";
-    mysqli_query($conn, $sql);
-    echo '<script>alert("Form has submitted successfully"); window.location.href = "mediation.php";</script>';
-    //header("Location: Mediation.php");
-}
-//end of insert proposal into database
-
 ?>
-
-
-<!-- Php code end -->
 
 
 
@@ -36,8 +74,8 @@ if(isset($_POST['submit1'])){
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Alliance</title>
+<meta charset="utf-8">
+    <title>Alliance </title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -64,12 +102,119 @@ if(isset($_POST['submit1'])){
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- xtra team link start -->
+    
+    <style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f3f6fa;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    .main-container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .container1 {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        margin-top: 50px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #333;
+        padding: 15px;
+        border-radius: 50px;
+        margin-bottom: 50px;
+        font-weight: bold;
+    }
+
+    .arbitration, .mediation, .lawyer {
+        margin-top: 40px;
+    }
+
+    .arbitration h2, .mediation h2, .lawyer h2 {
+        font-size: 1.75rem;
+        text-align: center;
+        color: #333;
+        padding: 10px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .arbitration h2::after, .mediation h2::after, .lawyer h2::after {
+        content: "";
+        display: block;
+        height: 4px;
+        background: linear-gradient(90deg, #ff6b6b, #f06595, #48c6ef, #6f86d6);
+        margin: 10px auto;
+        width: 100%;
+        border-radius: 5px;
+        animation: moveGradient 2s linear infinite;
+    }
+
+    @keyframes moveGradient {
+        0% { background-position: 0 0; }
+        100% { background-position: 100% 0; }
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: #f9fbfd;
+    }
+
+    th, td {
+        padding: 12px 20px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #48c6ef;
+        color: white;
+        text-transform: uppercase;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    td {
+        color: #555;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
 </head>
 
 <body>
-    
-     <!-- Topbar Start -->
-     <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
+
+
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
         <div class="row gx-0 d-none d-lg-flex">
             <div class="col-lg-7 px-5 text-start">
                 <div class="h-100 d-inline-flex align-items-center py-3 me-4">
@@ -111,12 +256,12 @@ if(isset($_POST['submit1'])){
             
             <a href="mediator.php" class="nav-item nav-link">Mediator</a>
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
-            <a href="querry.php" class="nav-item nav-link">Query</a>
+            <a href="query.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
                     <a href="Arbitration_proposal.php" class="dropdown-item">Arbitration Proposal</a>
-                    <a href="Arbitration.php" class="dropdown-item">Arbitration Case File</a>
+                    <a href="Arbitration.php" class="dropdown-item active">Arbitration Case File</a>
                     <a href="mediation_proposal.php" class="dropdown-item">Mediation Proposal</a>
                     <a href="mediation.php" class="dropdown-item">Mediation Case File</a>
                     <a href="others.php" class="dropdown-item">Service Information</a>
@@ -129,7 +274,7 @@ if(isset($_POST['submit1'])){
         <a href="lawyer_registration.php" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Register<i class="fa fa-arrow-right ms-3"></i><br>as lawyer</a>
     </div>
 </nav>
-
+ <!-- Navbar End -->
     <style>
     .page-header {
     background: url("header-page.jpg") top center no-repeat;
@@ -138,116 +283,84 @@ if(isset($_POST['submit1'])){
 }
 </style>
 
-    <!-- Page Header Start -->
-    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Mediation Proposal</h1>
-            <nav aria-label="breadcrumb animated slideInDown">
-                <ol class="breadcrumb text-uppercase mb-0">
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-                    <li class="breadcrumb-item text-primary active" aria-current="page">Mediation Proposal</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-    <!-- Page Header End -->
+   
 
 
-    <!-- Appointment Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <p class="d-inline-block border rounded-pill py-1 px-4">Mediation</p>
-                    <h1 class="mb-4">Why Medaiation?</h1>
-                    <p class="mb-4">Mediation is a voluntary process and many see this one of the key benefits of this forum of alternative dispute resolution. 
-                        It also provides a flexible and informal environment where each party has more control over the process and the decision they make.
-                         The informality of the mediation session also helps parties to fill ease which can help promote open dialogue and creative problem solving.
-                          The mediation is confidential and this confidentiality encourage open communication between the parties. 
-                        It is a cost efficient process and the parties get speedy remedy than the traditional litigation in court. </p>
+    <div class="container light-style flex-grow-1 container-p-y">
+        <h4 class=""></h4>
+        <div class="row">
+            <div class="col-lg-3 " style="position:fixed">
+                <?php include("Profile_side_nabbar.php"); ?>
+            </div>
 
-                        <p class="mb-4">Any one of the two persons has to fill the proposal form.
-                             One form will be submited for a separate case.
-                              If other person has submitted the form then it will be considered as a new case.
-                             After submitted the form you have to submit the case details in case file</p>
-                             
-                             <h4>Process for filling mediation proposal : </h4>
-                             <ol>
-                                <li>Form to be filled up with valid information.</li>
-                                <li>Once mediation proposal form is filled up and submitted, 
-                                the case number will be generated in the profile page(history option) and the plaintiff and 
-                                defendant will get email containing the details of the subject matter. </li>
-                             </ol>
-                   
-                </div>
-<!-- Proposal start -->
-<div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="bg-light rounded p-5">
-                        <p class="d-inline-block border rounded-pill py-1 px-4" style="color:blue;">Proposal</p>
-                        <h1 class="mb-4">Have Any Mediation Proposal? Please Submit Here!</h1>
-                        
-                        <form action="#" method="POST">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="issues" name="issues" placeholder="Disputed Issues">
-                                        <label for="issues">Disputed Issues</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" name="person1" placeholder="Person-1 Name">
-                                        <label for="name">Plaintiff Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="tel" class="form-control" id="phone" name="phone1" placeholder="Phone">
-                                        <label for="phone">Phone</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" name="email1" placeholder="Email">
-                                        <label for="email">Email</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" name="person2" placeholder="Person-2 Name">
-                                        <label for="name">Defendant Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="tel" class="form-control" id="phone" name="phone2" placeholder="Phone">
-                                        <label for="phone">Phone</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" name="email2" placeholder="Email">
-                                        <label for="email">Email</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" name="submit1" type="submit">Submit</button>
-                                </div>
-                            </div>
-                        </form>
+            <div class="col-lg-9 " style="margin-top: 30px; margin-left:375px; margin-bottom:120px; ">
+            <div class="arbitration">
+            <h2>Arbitration</h2>
+            <form action="#" method="POST">
+                <div style="display:flex;">
+                    <div class="" style=" margin-left:25px;">
+                        <label for="divisionSelect" class="form-label">Select Type</label>
+                        <select class="form-select" id="typeSelect" name="type">
+                            <option value="">None</option>
+                            <option value="pending">Pending</option>
+                            <option value="done">Complete</option> 
+                        </select>
+                    </div>
+                    <div style=" margin-left:25px;">
+                        <label for="postCode">Case Number</label>
+                        <input type="text" class="form-control" name="caseNumber" style="width:100px;">
+                    </div>
+                    <div style=" margin-left:25px;">
+                        <label for="postCode">Defendant Name</label>
+                        <input type="text" class="form-control" name="defendent" style="width:100px;">
+                    </div>
+                    <div class=" align-self-end" style=" margin-left:25px;">
+                        <button type="submit" class="btn btn-primary" name="search" style="height:40px; width:120px; margin-bottom:17px;">Search</button>
                     </div>
                 </div>
-                <!-- Proposal end -->
+            </form>
+
+            <table style="margin-top:10px; ">
+                <thead>
+                    <tr>
+                        <th>Plaintiff</th>
+                        <th>Defendant</th>
+                        <th>Issues</th>
+                        <th>Case Number</th>
+                        <th>Online Status</th>
+                        <th>Assigned Arbitrator ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                    $arbitration_sql = "SELECT * FROM arbitration_proposal 
+                                        WHERE ((email1='$userprofile') OR (email2='$userprofile'))";
+                    $arbitration_result = $conn->query($arbitration_sql);
+
+                    while ($row = $arbitration_result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row['person1'] . "</td>";
+                        echo "<td>" . $row['person2'] . "</td>";
+                        echo "<td>" . $row['issues'] . "</td>";
+                        echo "<td>" . $row['casenumber'] . "</td>";
+                        echo "<td>" . $row['status'] . "</td>";
+                        echo "<td>" . $row['arbitrator_id'] . "</td>";
+                        echo "</tr>";
+                    }
+                ?>
+                </tbody>
+            </table>
+        </div>
             </div>
         </div>
     </div>
-    <!-- Appointment End -->
-        
 
-<!-- Footer Start -->
-<div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+
+
+   
+
+   <!-- Footer Start -->
+   <div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
@@ -289,6 +402,7 @@ if(isset($_POST['submit1'])){
         
     </div>
     <!-- Footer End -->
+
 
 
     <!-- Back to Top -->

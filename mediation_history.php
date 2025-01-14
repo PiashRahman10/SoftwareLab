@@ -1,24 +1,12 @@
-<?php
+<?php 
+    session_start();
+    include("db.php");
 
-$host = 'localhost';
-$dbuser = 'root';
-$dbpass = '';
-$dbname = 'adr';
-$conn = mysqli_connect($host, $dbuser, $dbpass, $dbname);
+    $userprofile = $_SESSION['useremail'];
 
-// Initialize search term variable
-$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-
-// Fetch mediators from the database based on the search term
-$query = "SELECT * FROM mediator";
-
-// Add search term filter if it's set
-if ($searchTerm != '') {
-    $query .= " WHERE (name LIKE '%$searchTerm%' OR CONCAT(name, email) LIKE '%$searchTerm%')";
-}
-
-// Execute query
-$result = mysqli_query($conn, $query);
+    $sql = "SELECT* From user WHERE email='$userprofile'"; 
+    $result = $conn->query($sql);
+    $data = mysqli_fetch_assoc($result);
 ?>
 
 <!DOCTYPE html>
@@ -38,6 +26,8 @@ $result = mysqli_query($conn, $query);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet"> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -53,39 +43,114 @@ $result = mysqli_query($conn, $query);
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-
-    <!-- xtra team link start -->
-    
     <style>
-        /* Custom animation for lawyer cards */
-        .lawyer-card {
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-        .lawyer-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f3f6fa;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    .main-container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .container1 {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        margin-top: 50px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #333;
+        padding: 15px;
+        border-radius: 50px;
+        margin-bottom: 50px;
+        font-weight: bold;
+    }
+
+    .arbitration, .mediation, .lawyer {
+        margin-top: 40px;
+    }
+
+    .arbitration h2, .mediation h2, .lawyer h2 {
+        font-size: 1.75rem;
+        text-align: center;
+        color: #333;
+        padding: 10px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .arbitration h2::after, .mediation h2::after, .lawyer h2::after {
+        content: "";
+        display: block;
+        height: 4px;
+        background: linear-gradient(90deg, #ff6b6b, #f06595, #48c6ef, #6f86d6);
+        margin: 10px auto;
+        width: 100%;
+        border-radius: 5px;
+        animation: moveGradient 2s linear infinite;
+    }
+
+    @keyframes moveGradient {
+        0% { background-position: 0 0; }
+        100% { background-position: 100% 0; }
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: #f9fbfd;
+    }
+
+    th, td {
+        padding: 12px 20px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #48c6ef;
+        color: white;
+        text-transform: uppercase;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    td {
+        color: #555;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
         }
 
-        /* Increase circle size, border, and padding for images */
-        .lawyer-image {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border: 5px solid #007bff;
-            padding: 7px;
+        th, td {
+            padding: 10px;
         }
-        .page-header {
-            background: url("header-page.jpg") top center no-repeat;
-            background-size: cover;
-            text-shadow: 0 0 30px rgba(0, 0, 0, .1);
+
+        h1 {
+            font-size: 2rem;
         }
-    </style>
+    }
+</style>
+
 </head>
 
 <body>
-  
+    
     <!-- Topbar Start -->
     <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
         <div class="row gx-0 d-none d-lg-flex">
@@ -127,9 +192,9 @@ $result = mysqli_query($conn, $query);
             <a href="Homepage.php" class="nav-item nav-link">Home</a>
             <a href="aboutus.php" class="nav-item nav-link ">About</a>
             
-            <a href="mediator.php" class="nav-item nav-link active">Mediator</a>
-            <a href="arbitrator.php" class="nav-item nav-link ">Arbitrator</a>
-            <a href="querry.php" class="nav-item nav-link">Query</a>
+            <a href="mediator.php" class="nav-item nav-link">Mediator</a>
+            <a href="arbitrator.php" class="nav-item nav-link active">Arbitrator</a>
+            <a href="query.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
@@ -149,73 +214,85 @@ $result = mysqli_query($conn, $query);
 </nav>
     <!-- Navbar End -->
 
-    <!-- Page Header Start -->
-    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Mediator</h1>
-            <nav aria-label="breadcrumb animated slideInDown">
-                <ol class="breadcrumb text-uppercase mb-0">
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-                    <li class="breadcrumb-item text-primary active" aria-current="page">Mediator</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-    <!-- Page Header End -->
+   
 
-    <!-- Search Bar Start -->
-    <div class="container mb-5">
-        <form method="GET" action="">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search for a Arbitrator by name" value="<?php echo htmlspecialchars($searchTerm); ?>">
-                <button class="btn btn-primary" type="submit">Search</button>
+
+<div class="container light-style flex-grow-1 container-p-y">
+        <h4 class=""></h4>
+        <div class="row">
+            
+            <div class="col-lg-3 " style="position:fixed">
+                <?php include("Profile_side_nabbar.php"); ?>
             </div>
-        </form>
-    </div>
-    <!-- Search Bar End -->
 
-    <!-- Team Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-4">
+            
+            <div class="col-lg-9 " style="margin-top: 30px; margin-left:375px; margin-bottom:120px; ">
+            <div class="mediation">
+            <h2>Mediation</h2>
+            <form action="#" method="POST">
+                <div style="display:flex;">
+                    <div class="" style=" margin-left:25px;">
+                        <label for="divisionSelect" class="form-label">Select Type</label>
+                        <select class="form-select" id="typeSelect" name="type">
+                            <option value="">None</option>
+                            <option value="pending">Pending</option>
+                            <option value="done">Complete</option> 
+                        </select>
+                    </div>
+                    <div style=" margin-left:25px;">
+                        <label for="postCode">Case Number</label>
+                        <input type="text" class="form-control" name="caseNumber" style="width:100px;">
+                    </div>
+                    <div style=" margin-left:25px;">
+                        <label for="postCode">Defendant Name</label>
+                        <input type="text" class="form-control" name="defendent" style="width:100px;">
+                    </div>
+                    <div class=" align-self-end" style=" margin-left:25px;">
+                        <button type="submit" class="btn btn-primary" name="search" style="height:40px; width:120px; margin-bottom:17px;">Search</button>
+                    </div>
+                </div>
+            </form>
+            <table style="margin-top:10px; ">
+                <thead>
+                    <tr>
+                        <th>Plaintiff</th>
+                        <th>Defendant</th>
+                        <th>Issues</th>
+                        <th>Case Number</th>
+                        <th>Online Status</th>
+                        <th>Assigned Mediator ID</th>
+                    </tr>
+                </thead>
+                <tbody>
                 <?php
-                // Check if any mediators found
-                if (mysqli_num_rows($result) > 0) {
-                    // Fetch mediators and display their info
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        // Retrieve mediator information
-                        $name = $row['name'];
-                        $email = $row['email'];
-                        $phone = $row['phone'];
-                        $image = 'medpic/' . $row['pic']; // Adjusted image path
-                        ?>
-                        <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="lawyer-card team-item text-center rounded overflow-hidden">
-                                <div class="team-img position-relative">
-                                    <img class="lawyer-image img-fluid" src="<?php echo $image; ?>" alt="<?php echo $name; ?>">
-                                </div>
-                                <div class="p-4">
-                                    <h5 class="mb-0"><?php echo $name; ?></h5>
-                                    <small><?php echo $email; ?></small><br>
-                                    <small><?php echo $phone; ?></small>
-                                    
-                                </div>
-                                <a href="mediator_view.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="btn btn-primary rounded-pill">View Profile</a>
-                            </div>
-                        </div>
-                        <?php
+                    $mediation_sql = "SELECT person1,person2,issues,status,casenumber, mediator_id FROM mediation_proposal 
+                                      WHERE (email1='$userprofile' or email2='$userprofile')";
+                    $mediation_result = $conn->query($mediation_sql);
+
+                    while ($row = $mediation_result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row['person1'] . "</td>";
+                        echo "<td>" . $row['person2'] . "</td>";
+                        echo "<td>" . $row['issues'] . "</td>";
+                        echo "<td>" . $row['casenumber'] . "</td>";
+                        echo "<td>" . $row['status'] . "</td>";
+                        echo "<td>" . $row['mediator_id'] . "</td>";
+                        echo "</tr>";
                     }
-                } else {
-                    echo '<p>No mediators found.</p>';
-                }
                 ?>
+                </tbody>
+            </table>
+        </div>                    
             </div>
+           
+
         </div>
     </div>
+   
+   
 
-    <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+       <!-- Footer Start -->
+   <div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
@@ -257,6 +334,27 @@ $result = mysqli_query($conn, $query);
         
     </div>
     <!-- Footer End -->
-            </body>
-    <!-- Team End -->
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
     
+
+
+    <!-- JavaScript to set the current date in the hidden field -->
+<script>
+    // Automatically populate the current date and time into the hidden input field
+    document.getElementById('current_date').value = new Date().toISOString().slice(0, 19).replace('T', ' ');
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+

@@ -1,43 +1,76 @@
-<!-- Php code start -->
-
 <?php
-   include('db.php');
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-//insert proposal into database
-if(isset($_POST['submit1'])){
-    $issues=$_POST['issues'];
-    $person1=$_POST['person1'];
-    $email1=$_POST['email1'];
-    $phone1 = $_POST['phone1'];
-    $person2=$_POST['person2'];
-    $email2=$_POST['email2'];
-    $phone2 = $_POST['phone2'];
-
-    $sql = "INSERT INTO mediation_proposal (issues,person1,email1,phone1,person2,email2,phone2,status)
-    VALUES('$issues','$person1','$email1','$phone1','$person2','$email2','$phone2','pending')";
-    mysqli_query($conn, $sql);
-    echo '<script>alert("Form has submitted successfully"); window.location.href = "mediation.php";</script>';
-    //header("Location: Mediation.php");
+session_start();
+$host = 'localhost';
+$dbuser = 'root';
+$dbpass = '';
+$dbname = 'adr';
+$conn = mysqli_connect($host, $dbuser, $dbpass, $dbname);
+if (!isset($_SESSION['useremail'])) {
+    header('Location: login.php'); // Redirect to login if not logged in
+    exit();
 }
-//end of insert proposal into database
+// Check if session variable is set
+if (isset($_SESSION['useremail'])) {
+    $userprofile = $_SESSION['useremail'];
 
+    // Attempt to query the database
+    $sql = "SELECT * FROM user WHERE email='$userprofile'"; 
+    $result = $conn->query($sql);
+    
+    // Check if the query executed successfully
+    if ($result) {
+        // Check if any rows were returned
+        if ($result->num_rows > 0) {
+            // Fetch user data
+            $data = mysqli_fetch_assoc($result);
+        } else {
+            echo "No user data found.";
+        }
+    } else {
+        // If there was an error with the query
+        echo "Error: " . $conn->error;
+    }
+} else {
+    // If session variable is not set
+    echo "User email not set in session.";
+}
+
+if (isset($_POST['submit'])) {
+    // Handle file upload
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
+        $targetDir = "uploads/"; // Directory where the image will be stored
+        $targetFile = $targetDir . basename($_FILES["profile_picture"]["name"]);
+        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+        // Check if the file is an image
+        $check = getimagesize($_FILES["profile_picture"]["tmp_name"]);
+        if ($check !== false) {
+            // Move the uploaded file to the target directory
+            if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
+                // Update the database with the file path
+                $sqlprofile = "UPDATE user SET profilepic='$targetFile' WHERE email='$userprofile'";
+                mysqli_query($conn, $sqlprofile);
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
+        } else {
+            echo "File is not an image.";
+        }
+    } else {
+        echo "No file uploaded or there was an upload error.";
+    }
+}
+
+// Close the database connection
+$conn->close();
 ?>
-
-
-<!-- Php code end -->
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Alliance</title>
+<meta charset="utf-8">
+    <title>Alliance </title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -64,12 +97,17 @@ if(isset($_POST['submit1'])){
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- xtra team link start -->
+    
+
 </head>
 
 <body>
-    
-     <!-- Topbar Start -->
-     <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
+
+
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
         <div class="row gx-0 d-none d-lg-flex">
             <div class="col-lg-7 px-5 text-start">
                 <div class="h-100 d-inline-flex align-items-center py-3 me-4">
@@ -111,12 +149,12 @@ if(isset($_POST['submit1'])){
             
             <a href="mediator.php" class="nav-item nav-link">Mediator</a>
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
-            <a href="querry.php" class="nav-item nav-link">Query</a>
+            <a href="query.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
                     <a href="Arbitration_proposal.php" class="dropdown-item">Arbitration Proposal</a>
-                    <a href="Arbitration.php" class="dropdown-item">Arbitration Case File</a>
+                    <a href="Arbitration.php" class="dropdown-item active">Arbitration Case File</a>
                     <a href="mediation_proposal.php" class="dropdown-item">Mediation Proposal</a>
                     <a href="mediation.php" class="dropdown-item">Mediation Case File</a>
                     <a href="others.php" class="dropdown-item">Service Information</a>
@@ -129,7 +167,7 @@ if(isset($_POST['submit1'])){
         <a href="lawyer_registration.php" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Register<i class="fa fa-arrow-right ms-3"></i><br>as lawyer</a>
     </div>
 </nav>
-
+ <!-- Navbar End -->
     <style>
     .page-header {
     background: url("header-page.jpg") top center no-repeat;
@@ -138,116 +176,75 @@ if(isset($_POST['submit1'])){
 }
 </style>
 
-    <!-- Page Header Start -->
-    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Mediation Proposal</h1>
-            <nav aria-label="breadcrumb animated slideInDown">
-                <ol class="breadcrumb text-uppercase mb-0">
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-                    <li class="breadcrumb-item text-primary active" aria-current="page">Mediation Proposal</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-    <!-- Page Header End -->
+   
 
 
-    <!-- Appointment Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <p class="d-inline-block border rounded-pill py-1 px-4">Mediation</p>
-                    <h1 class="mb-4">Why Medaiation?</h1>
-                    <p class="mb-4">Mediation is a voluntary process and many see this one of the key benefits of this forum of alternative dispute resolution. 
-                        It also provides a flexible and informal environment where each party has more control over the process and the decision they make.
-                         The informality of the mediation session also helps parties to fill ease which can help promote open dialogue and creative problem solving.
-                          The mediation is confidential and this confidentiality encourage open communication between the parties. 
-                        It is a cost efficient process and the parties get speedy remedy than the traditional litigation in court. </p>
+    <div class="container light-style flex-grow-1 container-p-y">
+        <h4 class=""></h4>
+        <div class="row">
+            <div class="col-lg-3 " style="position:fixed">
+                <?php include("Profile_side_nabbar.php"); ?>
+            </div>
 
-                        <p class="mb-4">Any one of the two persons has to fill the proposal form.
-                             One form will be submited for a separate case.
-                              If other person has submitted the form then it will be considered as a new case.
-                             After submitted the form you have to submit the case details in case file</p>
-                             
-                             <h4>Process for filling mediation proposal : </h4>
-                             <ol>
-                                <li>Form to be filled up with valid information.</li>
-                                <li>Once mediation proposal form is filled up and submitted, 
-                                the case number will be generated in the profile page(history option) and the plaintiff and 
-                                defendant will get email containing the details of the subject matter. </li>
-                             </ol>
-                   
-                </div>
-<!-- Proposal start -->
-<div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="bg-light rounded p-5">
-                        <p class="d-inline-block border rounded-pill py-1 px-4" style="color:blue;">Proposal</p>
-                        <h1 class="mb-4">Have Any Mediation Proposal? Please Submit Here!</h1>
-                        
-                        <form action="#" method="POST">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="issues" name="issues" placeholder="Disputed Issues">
-                                        <label for="issues">Disputed Issues</label>
-                                    </div>
+            <div class="col-lg-9 " style="margin-top: 100px; margin-left:375px; ">
+                <!--profile card -->        
+                <div class="row g-4" style="max-width: 1000px;">
+                    <div class="col-5">
+                        <?php
+                        // Assuming $data['image'] contains the path to the profile picture
+                        if (!empty($data['profilepic'])) {
+                            echo "<img src='" . $data['profilepic'] . "' height='380px' width='395px'>";
+                        } else {
+                            echo "<img src='image/default_user.png' height='380px' width='395px'>"; // Show default image if no profile picture
+                        }
+                        ?>                      
+                    </div>   
+                    <div class="col-7 border border-primary">
+                        <div class="card-body">
+                            <h3 class="card-title"><?php echo $data['fullname']; ?></h3> <br>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td><h6>Email</h6></td>
+                                        <td><p><?php echo $data['email']; ?></p></td>
+                                    </tr>
+                                    <tr> 
+                                        <td><h6>Phone</h6></td>
+                                        <td><?php echo $data['phone']; ?></td>
+                                    </tr>
+                                    <tr> 
+                                        <td><h6>Profession</h6></td>
+                                        <td><?php echo 'qualification'; ?></td>
+                                    </tr>
+                                    <tr> 
+                                        <td><h6>Address</h6></td>
+                                        <td><?php echo 'chamber address'; ?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+
+                            <form action="#" method="POST" enctype="multipart/form-data">
+                                <div class="form-group p-1">
+                                    <h6>Upload Profile Picture:</h6>
+                                    <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                                    <button type="submit" name="submit" class="btn btn-info">Upload</button>
                                 </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" name="person1" placeholder="Person-1 Name">
-                                        <label for="name">Plaintiff Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="tel" class="form-control" id="phone" name="phone1" placeholder="Phone">
-                                        <label for="phone">Phone</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" name="email1" placeholder="Email">
-                                        <label for="email">Email</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" name="person2" placeholder="Person-2 Name">
-                                        <label for="name">Defendant Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="tel" class="form-control" id="phone" name="phone2" placeholder="Phone">
-                                        <label for="phone">Phone</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" name="email2" placeholder="Email">
-                                        <label for="email">Email</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" name="submit1" type="submit">Submit</button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <!-- Proposal end -->
+                <!--end profile card-->
             </div>
         </div>
     </div>
-    <!-- Appointment End -->
-        
 
-<!-- Footer Start -->
-<div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+
+
+   
+
+   <!-- Footer Start -->
+   <div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
@@ -289,6 +286,7 @@ if(isset($_POST['submit1'])){
         
     </div>
     <!-- Footer End -->
+
 
 
     <!-- Back to Top -->

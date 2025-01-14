@@ -1,13 +1,48 @@
-<?php
-// Database connection
-include("db.php");
+<?php 
+session_start();
+$host = 'localhost';
+$dbuser = 'root';
+$dbpass = '';
+$dbname = 'adr';
+$conn = mysqli_connect($host, $dbuser, $dbpass, $dbname);
+// Check if the user is logged in
+if (!isset($_SESSION['useremail'])) {
+    header('Location: login.php'); // Redirect to login if not logged in
+    exit();
+}
+    $userprofile = $_SESSION['useremail'];
 
-// Fetch mediator details
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-    $queryx = "SELECT * FROM mediator WHERE id = '$id'";
-    $resultx = mysqli_query($conn, $queryx);
-    $datax = mysqli_fetch_assoc($resultx);
+if(isset($_POST['change']))
+{
+    $current_password = $_POST['current_password'];
+    $new_password = $_POST['new_password'];
+    $new_password_two=$_POST['new_password_two'];
+
+    if($new_password== $new_password_two){
+        $sql = "SELECT* From user WHERE email='$userprofile' AND password='$current_password'  "; 
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $sqlpass = "UPDATE user SET password='$new_password' WHERE email='$userprofile'";
+            
+            mysqli_query($conn, $sqlpass);
+            echo '<script>
+            window.location.href="profile.php"; 
+            alert("password change Successfull")
+            </script>'; 
+        } else {
+            echo '<script>
+            window.location.href="change_password.php"; 
+            alert("Invalid password")
+            </script>'; 
+        }
+    }else{
+        echo '<script>
+        window.location.href="change_password.php"; 
+        alert("Please correct the new password")
+        </script>'; 
+    }
+   
+    
 }
 ?>
 
@@ -15,76 +50,45 @@ if (isset($_GET['id'])) {
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Alliance</title>
+<meta charset="utf-8">
+    <title>Alliance </title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
+
+    <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
     <link href="lib/animate/animate.min.css" rel="stylesheet">
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 
-    <style>
-        .mediator-profile-card {
-            display: flex;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
+    <!-- xtra team link start -->
+    
 
-        .mediator-image {
-            flex: 1;
-            max-width: 300px;
-            margin-right: 30px;
-        }
-
-        .mediator-image img {
-            border-radius: 8px;
-            width: 100%;
-            height: auto;
-        }
-
-        .mediator-info {
-            flex: 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .mediator-info h5 {
-            font-size: 28px;
-            color: #007bff;
-            font-weight: 700;
-        }
-
-        .mediator-info p {
-            font-size: 16px;
-            color: #333;
-            margin: 5px 0;
-        }
-
-        .mediator-info strong {
-            color: #555;
-        }
-
-        .mediator-info .divider {
-            width: 100%;
-            height: 1px;
-            background-color: #ddd;
-            margin: 20px 0;
-        }
-    </style>
 </head>
 
 <body>
-<div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
+
+
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
         <div class="row gx-0 d-none d-lg-flex">
             <div class="col-lg-7 px-5 text-start">
                 <div class="h-100 d-inline-flex align-items-center py-3 me-4">
@@ -124,14 +128,14 @@ if (isset($_GET['id'])) {
             <a href="Homepage.php" class="nav-item nav-link ">Home</a>
             <a href="aboutus.php" class="nav-item nav-link ">About</a>
             
-            <a href="mediator.php" class="nav-item nav-link active">Mediator</a>
+            <a href="mediator.php" class="nav-item nav-link">Mediator</a>
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
             <a href="querry.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Service</a>
+                <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
                     <a href="Arbitration_proposal.php" class="dropdown-item">Arbitration Proposal</a>
-                    <a href="Arbitration.php" class="dropdown-item">Arbitration Case File</a>
+                    <a href="Arbitration.php" class="dropdown-item active">Arbitration Case File</a>
                     <a href="mediation_proposal.php" class="dropdown-item">Mediation Proposal</a>
                     <a href="mediation.php" class="dropdown-item">Mediation Case File</a>
                     <a href="others.php" class="dropdown-item">Service Information</a>
@@ -144,66 +148,56 @@ if (isset($_GET['id'])) {
         <a href="lawyer_registration.php" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Register<i class="fa fa-arrow-right ms-3"></i><br>as lawyer</a>
     </div>
 </nav>
-    <!-- Page Header start -->
-<style>
+ <!-- Navbar End -->
+    <style>
     .page-header {
-        background: url("header-page.jpg") top center no-repeat;
-        background-size: cover;
-        text-shadow: 0 0 30px rgba(0, 0, 0, .1);
-    }
-    </style>
-    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Mediator Profile</h1>
-            <nav aria-label="breadcrumb animated slideInDown">
-                <ol class="breadcrumb text-uppercase mb-0">
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-                    <li class="breadcrumb-item text-primary active" aria-current="page">Mediator Profile</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-    <!-- Page Header End -->
+    background: url("header-page.jpg") top center no-repeat;
+    background-size: cover;
+    text-shadow: 0 0 30px rgba(0, 0, 0, .1);
+}
+</style>
 
-    <!-- Mediator Profile Section -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5">
-                <!-- Mediator profile card -->
-                <div class="col-lg-12 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="mediator-profile-card">
-                        <!-- Left side: Image -->
-                        <div class="mediator-image">
-                            <?php
-                            if (!empty($datax['pic'])) {
-                                echo "<img src='medpic/" . $datax['pic'] . "' alt='Mediator Image'>";
-                            } else {
-                                echo "<img src='medpic/default.png' alt='Default Image'>";
-                            }
-                            ?>
-                        </div>
+   
 
-                        <!-- Right side: Information -->
-                        <div class="mediator-info">
-                            <h5><?php echo $datax['name']; ?></h5>
-                            <p><strong>ID:</strong> <?php echo $datax['id']; ?></p>
-                            <p><strong>Experience:</strong> <?php echo $datax['experience']; ?> years</p>
-                            <p><strong>Profession:</strong> <?php echo $datax['profession']; ?></p>
-                            <p><strong>Qualification:</strong> <?php echo $datax['qualification']; ?></p>
-                            <p><strong>Status:</strong> <?php echo $datax['status']; ?></p>
-
-                            <div class="divider"></div>
-
-                            <p><strong>Note:</strong> One of the best mediator you can trust easily.</p>
-                        </div>
-                    </div>
-                </div>
+<div class="container light-style flex-grow-1 container-p-y">
+        <h4 class=""  ></h4>
+        <div class="row">
+            <div class=" col-lg-3" style="position:fixed">
+            <?php include("Profile_side_nabbar.php"); ?>
             </div>
-        </div>
+            
+            <div class="col-lg-9 " style="margin-top: 100px; margin-left:375px;" >
+                    <!--Change password-->
+                            <div class="p-4  border border-primary">
+                              <h5>Change your Password</h5>
+                              <form action="#" method="POST">
+                              <div class="form-group"> 
+                                    <label class="form-label">Current password</label>
+                                    <input type="password" name="current_password" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">New password</label>
+                                    <input type="password" name="new_password" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Repeat new password</label>
+                                    <input type="password" name="new_password_two" class="form-control">
+                                </div>
+
+                                <button type="submit"name="change" class="btn btn-info " style="margin-top: 25px; margin-left:380px;">Change</button>
+
+                              </form>
+                                
+                            </div>
+                    <!--End change password-->
+
+            </div>
+        </div>            
+        
     </div>
-<!-- Footer Start -->
-<div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+
+   <!-- Footer Start -->
+   <div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
@@ -246,6 +240,26 @@ if (isset($_GET['id'])) {
     </div>
     <!-- Footer End -->
 
-    </body>
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
 
 </html>

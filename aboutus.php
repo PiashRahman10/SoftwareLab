@@ -1,43 +1,10 @@
-<!-- Php code start -->
-
-<?php
-   include('db.php');
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-//insert proposal into database
-if(isset($_POST['submit1'])){
-    $issues=$_POST['issues'];
-    $person1=$_POST['person1'];
-    $email1=$_POST['email1'];
-    $phone1 = $_POST['phone1'];
-    $person2=$_POST['person2'];
-    $email2=$_POST['email2'];
-    $phone2 = $_POST['phone2'];
-
-    $sql = "INSERT INTO mediation_proposal (issues,person1,email1,phone1,person2,email2,phone2,status)
-    VALUES('$issues','$person1','$email1','$phone1','$person2','$email2','$phone2','pending')";
-    mysqli_query($conn, $sql);
-    echo '<script>alert("Form has submitted successfully"); window.location.href = "mediation.php";</script>';
-    //header("Location: Mediation.php");
-}
-//end of insert proposal into database
-
-?>
-
-
-<!-- Php code end -->
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Alliance</title>
+<meta charset="utf-8">
+    <title>Alliance </title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -64,12 +31,16 @@ if(isset($_POST['submit1'])){
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- xtra team link start -->
+    
+
 </head>
 
 <body>
-    
-     <!-- Topbar Start -->
-     <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
+
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
         <div class="row gx-0 d-none d-lg-flex">
             <div class="col-lg-7 px-5 text-start">
                 <div class="h-100 d-inline-flex align-items-center py-3 me-4">
@@ -106,14 +77,14 @@ if(isset($_POST['submit1'])){
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="Homepage.php" class="nav-item nav-link ">Home</a>
-            <a href="aboutus.php" class="nav-item nav-link ">About</a>
+            <a href="Homepage.php" class="nav-item nav-link">Home</a>
+            <a href="aboutus.php" class="nav-item nav-link active">About</a>
             
             <a href="mediator.php" class="nav-item nav-link">Mediator</a>
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
             <a href="querry.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Service</a>
+                <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
                     <a href="Arbitration_proposal.php" class="dropdown-item">Arbitration Proposal</a>
                     <a href="Arbitration.php" class="dropdown-item">Arbitration Case File</a>
@@ -130,6 +101,7 @@ if(isset($_POST['submit1'])){
     </div>
 </nav>
 
+    <!-- Navbar End -->
     <style>
     .page-header {
     background: url("header-page.jpg") top center no-repeat;
@@ -141,12 +113,12 @@ if(isset($_POST['submit1'])){
     <!-- Page Header Start -->
     <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Mediation Proposal</h1>
+            <h1 class="display-3 text-white mb-3 animated slideInDown">About Us</h1>
             <nav aria-label="breadcrumb animated slideInDown">
                 <ol class="breadcrumb text-uppercase mb-0">
                     <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
                     <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-                    <li class="breadcrumb-item text-primary active" aria-current="page">Mediation Proposal</li>
+                    <li class="breadcrumb-item text-primary active" aria-current="page">About Us</li>
                 </ol>
             </nav>
         </div>
@@ -154,100 +126,110 @@ if(isset($_POST['submit1'])){
     <!-- Page Header End -->
 
 
-    <!-- Appointment Start -->
+    <!-- About Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-5">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <p class="d-inline-block border rounded-pill py-1 px-4">Mediation</p>
-                    <h1 class="mb-4">Why Medaiation?</h1>
-                    <p class="mb-4">Mediation is a voluntary process and many see this one of the key benefits of this forum of alternative dispute resolution. 
-                        It also provides a flexible and informal environment where each party has more control over the process and the decision they make.
-                         The informality of the mediation session also helps parties to fill ease which can help promote open dialogue and creative problem solving.
-                          The mediation is confidential and this confidentiality encourage open communication between the parties. 
-                        It is a cost efficient process and the parties get speedy remedy than the traditional litigation in court. </p>
-
-                        <p class="mb-4">Any one of the two persons has to fill the proposal form.
-                             One form will be submited for a separate case.
-                              If other person has submitted the form then it will be considered as a new case.
-                             After submitted the form you have to submit the case details in case file</p>
-                             
-                             <h4>Process for filling mediation proposal : </h4>
-                             <ol>
-                                <li>Form to be filled up with valid information.</li>
-                                <li>Once mediation proposal form is filled up and submitted, 
-                                the case number will be generated in the profile page(history option) and the plaintiff and 
-                                defendant will get email containing the details of the subject matter. </li>
-                             </ol>
-                   
-                </div>
-<!-- Proposal start -->
-<div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="bg-light rounded p-5">
-                        <p class="d-inline-block border rounded-pill py-1 px-4" style="color:blue;">Proposal</p>
-                        <h1 class="mb-4">Have Any Mediation Proposal? Please Submit Here!</h1>
-                        
-                        <form action="#" method="POST">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="issues" name="issues" placeholder="Disputed Issues">
-                                        <label for="issues">Disputed Issues</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" name="person1" placeholder="Person-1 Name">
-                                        <label for="name">Plaintiff Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="tel" class="form-control" id="phone" name="phone1" placeholder="Phone">
-                                        <label for="phone">Phone</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" name="email1" placeholder="Email">
-                                        <label for="email">Email</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" name="person2" placeholder="Person-2 Name">
-                                        <label for="name">Defendant Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="tel" class="form-control" id="phone" name="phone2" placeholder="Phone">
-                                        <label for="phone">Phone</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" name="email2" placeholder="Email">
-                                        <label for="email">Email</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" name="submit1" type="submit">Submit</button>
-                                </div>
-                            </div>
-                        </form>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="d-flex flex-column">
+                        <img class="img-fluid rounded w-75 align-self-end" src="img/about-1.png" alt="">
+                        <img class="img-fluid rounded w-50 bg-white pt-3 pe-3" src="img/about-2.png" alt="" style="margin-top: -25%;">
                     </div>
                 </div>
-                <!-- Proposal end -->
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <p class="d-inline-block border rounded-pill py-1 px-4">About Us</p>
+                    <h1 class="mb-4">Why You Should Trust Us? Get Know About Us!</h1>
+                    <p>Our agenda is to create awareness of law and we are also trying to reduce the pending cases in court.
+                         We want to give an opportunity to people to lead a peaceful and problem-free life</p>
+                    <p class="mb-4">Alliance Consultancy Firm is a well recognize law firm in Bangladesh.
+                         Our law firm is a registered body and all of our lawyer, arbitrator, mediator and stuffs are well trained and qualified. 
+                         We have been serving so many well known companies of our country like Beximco, Bashundhara group,
+                          Bangladesh Biman and SA group with due diligence. 
+                        We also have partnership with many national and international law firms and companies.</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Quality Service</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Only Qualified Lawyers</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Discussion With Lawyers In Querry Box</p>
+                    
+                </div>
             </div>
         </div>
     </div>
-    <!-- Appointment End -->
+    <!-- About End -->
+
+
+    <!-- Feature Start -->
+    <div class="container-fluid bg-primary overflow-hidden my-5 px-lg-0">
+        <div class="container feature px-lg-0">
+            <div class="row g-0 mx-lg-0">
+                <div class="col-lg-6 feature-text py-5 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="p-lg-5 ps-lg-0">
+                        <p class="d-inline-block border rounded-pill text-light py-1 px-4">Features</p>
+                        <h1 class="text-white mb-4">Why Choose Us</h1>
+                        <p class="text-white mb-4 pb-2">Alliance Consultancy Firm is a well respected law firm in Bangladesh.
+                             We provide highly qualified lawyers and arbitators who have been practicing in the supreme court of Bangladesh for long time.
+                             We also provide qualified and experienced mediators. They have vast knowledge in their practicing area. Moreover,
+                              our lawyers success rate is over 85% and the success rate of our arbitrators and mediators over 80%.</p>
+                        <div class="row g-4">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
+                                        <i class="fa fa-user text-primary"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="text-white mb-2">Experience</p>
+                                        <h5 class="text-white mb-0">Legal Advisors</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
+                                        <i class="fa fa-check text-primary"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="text-white mb-2">Quality</p>
+                                        <h5 class="text-white mb-0">Services</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
+                                        <i class="fa fa-comment-medical text-primary"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="text-white mb-2">Positive</p>
+                                        <h5 class="text-white mb-0">Consultation</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
+                                        <i class="fa fa-headphones text-primary"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="text-white mb-2">24 Hours</p>
+                                        <h5 class="text-white mb-0">Support</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 pe-lg-0 wow fadeIn" data-wow-delay="0.5s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute img-fluid w-100 h-100" src="img/feature.png" style="object-fit: cover;" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Feature End -->
         
 
-<!-- Footer Start -->
-<div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
@@ -289,6 +271,7 @@ if(isset($_POST['submit1'])){
         
     </div>
     <!-- Footer End -->
+
 
 
     <!-- Back to Top -->

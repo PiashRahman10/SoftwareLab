@@ -120,14 +120,14 @@ if(isset($_POST['submit2'])){
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="Homepage.php" class="nav-item nav-link active">Home</a>
+            <a href="Homepage.php" class="nav-item nav-link ">Home</a>
             <a href="aboutus.php" class="nav-item nav-link ">About</a>
             
             <a href="mediator.php" class="nav-item nav-link">Mediator</a>
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
             <a href="querry.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Service</a>
+                <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
                     <a href="Arbitration_proposal.php" class="dropdown-item">Arbitration Proposal</a>
                     <a href="Arbitration.php" class="dropdown-item">Arbitration Case File</a>
@@ -320,6 +320,49 @@ if(isset($_POST['submit2'])){
     </div>
     <!-- Contact End -->
 
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-light mb-4">Address</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Baridhara, Gulshan-2, Dhaka-1212</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+88 01780337775</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>alliance247@gmail.com</p>
+                    
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-light mb-4">Services</h5>
+                    <a class="btn btn-link" href="">Arbitration</a>
+                    <a class="btn btn-link" href="">Mediation</a>
+                    <a class="btn btn-link" href="">Lawyers</a>
+                    <a class="btn btn-link" href="">Arbitration case file</a>
+                    <a class="btn btn-link" href="">Mediation Case File</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-light mb-4">Quick Links</h5>
+                    <a class="btn btn-link" href="">About Us</a>
+                    <a class="btn btn-link" href="">Contact Us</a>
+                    <a class="btn btn-link" href="">Our Services</a>
+                    <a class="btn btn-link" href="">Terms & Condition</a>
+                    <a class="btn btn-link" href="">Support</a>
+                </div>
+                <!-- most right text area-->
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-light mb-4">Follow Us</h5>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <!-- end of most right text area-->
+            </div>
+        </div>
+        
+    </div>
+    <!-- Footer End -->
 
    
 
