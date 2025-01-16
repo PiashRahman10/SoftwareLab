@@ -13,11 +13,25 @@ if(isset($_POST['Login']))
 
     $sql = "SELECT* From user WHERE email='$email' AND password='$password'"; 
     $result = $conn->query($sql);
+
+    
+    $sql2 = "SELECT* From user WHERE email='$email' AND password='$password' and status = 'mediator'"; 
+    $result2 = $conn->query($sql2);
+
    if($email=='admin@gmail.com' && $password=='admin'){
     header("Location: Admin.php");
-   }else if ($result->num_rows > 0) {
+   }
+   else if ($result2->num_rows > 0) {
+    $_SESSION['useremail']= $email;
+    header("Location: mediator_dashboard.php");
+    exit();
+    
+    } 
+   
+   else if ($result->num_rows > 0) {
     $_SESSION['useremail']= $email;
     header("Location: HomePage.php");
+    
 } else {
     echo '<script>
     window.location.href="Login.php"; 
