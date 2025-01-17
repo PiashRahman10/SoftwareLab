@@ -258,7 +258,7 @@
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
             <a href="query.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Service</a>
+                <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
                     <a href="Arbitration_proposal.php" class="dropdown-item">Arbitration Proposal</a>
                     <a href="Arbitration.php" class="dropdown-item active">Arbitration Case File</a>
@@ -269,7 +269,7 @@
                     
                 </div>
             </div>
-            <a href="profile.php" class="nav-item nav-link">Profile</a>
+            <a href="profile.php" class="nav-item nav-link active">Profile</a>
         </div>
         <a href="lawyer_registration.php" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Register<i class="fa fa-arrow-right ms-3"></i><br>as lawyer</a>
     </div>
@@ -328,7 +328,8 @@
                         <th>Issues</th>
                         <th>Case Number</th>
                         <th>Online Status</th>
-                        <th>Assigned Arbitrator ID</th>
+                        <th> Arbitrator ID</th>
+                        <th> Details </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -345,6 +346,7 @@
                         echo "<td>" . $row['casenumber'] . "</td>";
                         echo "<td>" . $row['status'] . "</td>";
                         echo "<td>" . $row['arbitrator_id'] . "</td>";
+                        echo '<td><a href="arbitration_details.php?email=' . $row['email1'] . '">Click</a></td>';
                         echo "</tr>";
                     }
                 ?>

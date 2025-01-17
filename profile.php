@@ -151,10 +151,10 @@ $conn->close();
             <a href="arbitrator.php" class="nav-item nav-link">Arbitrator</a>
             <a href="query.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Service</a>
+                <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
                     <a href="Arbitration_proposal.php" class="dropdown-item">Arbitration Proposal</a>
-                    <a href="Arbitration.php" class="dropdown-item active">Arbitration Case File</a>
+                    <a href="Arbitration.php" class="dropdown-item ">Arbitration Case File</a>
                     <a href="mediation_proposal.php" class="dropdown-item">Mediation Proposal</a>
                     <a href="mediation.php" class="dropdown-item">Mediation Case File</a>
                     <a href="others.php" class="dropdown-item">Service Information</a>
@@ -162,7 +162,7 @@ $conn->close();
                     
                 </div>
             </div>
-            <a href="profile.php" class="nav-item nav-link">Profile</a>
+            <a href="profile.php" class="nav-item nav-link active">Profile</a>
         </div>
         <a href="lawyer_registration.php" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Register<i class="fa fa-arrow-right ms-3"></i><br>as lawyer</a>
     </div>
@@ -182,7 +182,7 @@ $conn->close();
     <div class="container light-style flex-grow-1 container-p-y">
         <h4 class=""></h4>
         <div class="row">
-            <div class="col-lg-3 " style="position:fixed">
+            <div class="col-lg-3  " style="position:fixed">
                 <?php include("Profile_side_nabbar.php"); ?>
             </div>
 

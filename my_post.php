@@ -12,6 +12,7 @@ $conn = mysqli_connect($host, $dbuser, $dbpass, $dbname);
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
+
 if (isset($_SESSION['useremail'])) {
     $userprofile = $_SESSION['useremail'];
     $name  = "";
@@ -32,18 +33,42 @@ if (isset($_SESSION['useremail'])) {
 if (isset($_POST['delete'])) {
     $emailToDelete = mysqli_real_escape_string($conn, $_POST['email']);
     $idToDelete = mysqli_real_escape_string($conn, $_POST['id']);
-    
-    // Perform the delete operation
-    $delete_sql = "DELETE FROM community WHERE email = '$emailToDelete' AND id='$idToDelete'";
-    
-    if (mysqli_query($conn, $delete_sql)) {
+
+    // Start a transaction to ensure all deletions are atomic
+    mysqli_begin_transaction($conn);
+
+    try {
+        // Delete from likes table
+        $sql_likes = "DELETE FROM likes WHERE post_id = ?";
+        $stmt_likes = $conn->prepare($sql_likes);
+        $stmt_likes->bind_param("i", $idToDelete);
+        $stmt_likes->execute();
+
+        // Delete from comments table
+        $sql_comments = "DELETE FROM comments WHERE post_id = ?";
+        $stmt_comments = $conn->prepare($sql_comments);
+        $stmt_comments->bind_param("i", $idToDelete);
+        $stmt_comments->execute();
+
+        // Delete from community table (the post)
+        $delete_sql = "DELETE FROM community WHERE email = ? AND id = ?";
+        $stmt_delete = $conn->prepare($delete_sql);
+        $stmt_delete->bind_param("si", $emailToDelete, $idToDelete);
+        $stmt_delete->execute();
+
+        // Commit the transaction
+        mysqli_commit($conn);
+        
         echo '<script>alert("Post deleted successfully."); </script>';
-    } else {
-        echo "Error deleting record: " . mysqli_error($conn);
+        } catch (Exception $e) {
+        // If there is any error, rollback the transaction
+        mysqli_rollBack($conn);
+        echo "Error deleting record: " . $e->getMessage();
     }
 }
 
 ?>
+
 
 
 <!DOCTYPE html>
@@ -220,7 +245,7 @@ if (isset($_POST['delete'])) {
             <a href="aboutus.php" class="nav-item nav-link ">About</a>
             
             <a href="mediator.php" class="nav-item nav-link">Mediator</a>
-            <a href="arbitrator.php" class="nav-item nav-link active">Arbitrator</a>
+            <a href="arbitrator.php" class="nav-item nav-link ">Arbitrator</a>
             <a href="query.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Service</a>
@@ -234,7 +259,7 @@ if (isset($_POST['delete'])) {
                     
                 </div>
             </div>
-            <a href="profile.php" class="nav-item nav-link">Profile</a>
+            <a href="profile.php" class="nav-item nav-link active">Profile</a>
         </div>
         <a href="lawyer_registration.php" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Register<i class="fa fa-arrow-right ms-3"></i><br>as lawyer</a>
     </div>

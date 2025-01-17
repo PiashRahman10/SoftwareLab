@@ -193,7 +193,7 @@
             <a href="aboutus.php" class="nav-item nav-link ">About</a>
             
             <a href="mediator.php" class="nav-item nav-link">Mediator</a>
-            <a href="arbitrator.php" class="nav-item nav-link active">Arbitrator</a>
+            <a href="arbitrator.php" class="nav-item nav-link ">Arbitrator</a>
             <a href="query.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Service</a>
@@ -207,7 +207,7 @@
                     
                 </div>
             </div>
-            <a href="profile.php" class="nav-item nav-link">Profile</a>
+            <a href="profile.php" class="nav-item nav-link active">Profile</a>
         </div>
         <a href="lawyer_registration.php" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Register<i class="fa fa-arrow-right ms-3"></i><br>as lawyer</a>
     </div>
@@ -260,12 +260,13 @@
                         <th>Issues</th>
                         <th>Case Number</th>
                         <th>Online Status</th>
-                        <th>Assigned Mediator ID</th>
+                        <th>Mediator ID</th>
+                        <th>Details </th>
                     </tr>
                 </thead>
                 <tbody>
                 <?php
-                    $mediation_sql = "SELECT person1,person2,issues,status,casenumber, mediator_id FROM mediation_proposal 
+                    $mediation_sql = "SELECT person1,person2,email1,issues,status,casenumber, mediator_id FROM mediation_proposal 
                                       WHERE (email1='$userprofile' or email2='$userprofile')";
                     $mediation_result = $conn->query($mediation_sql);
 
@@ -277,6 +278,7 @@
                         echo "<td>" . $row['casenumber'] . "</td>";
                         echo "<td>" . $row['status'] . "</td>";
                         echo "<td>" . $row['mediator_id'] . "</td>";
+                        echo '<td><a href="mediation_details.php?email=' . $row['email1'] . '">Click</a></td>';
                         echo "</tr>";
                     }
                 ?>
