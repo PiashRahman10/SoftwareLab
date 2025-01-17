@@ -18,6 +18,9 @@ if(isset($_POST['Login']))
     $sql2 = "SELECT* From user WHERE email='$email' AND password='$password' and status = 'mediator'"; 
     $result2 = $conn->query($sql2);
 
+    $sql3 = "SELECT* From user WHERE email='$email' AND password='$password' and status = 'arbitrator'"; 
+    $result3 = $conn->query($sql3);
+
    if($email=='admin@gmail.com' && $password=='admin'){
     header("Location: Admin.php");
    }
@@ -27,6 +30,13 @@ if(isset($_POST['Login']))
     exit();
     
     } 
+
+    else if ($result3->num_rows > 0) {
+        $_SESSION['useremail']= $email;
+        header("Location: arbitrator_dashboard.php");
+        exit();
+        
+        } 
    
    else if ($result->num_rows > 0) {
     $_SESSION['useremail']= $email;
