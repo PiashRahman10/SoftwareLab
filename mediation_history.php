@@ -260,12 +260,13 @@
                         <th>Issues</th>
                         <th>Case Number</th>
                         <th>Online Status</th>
-                        <th>Assigned Mediator ID</th>
+                        <th>Mediator ID</th>
+                        <th>Details </th>
                     </tr>
                 </thead>
                 <tbody>
                 <?php
-                    $mediation_sql = "SELECT person1,person2,issues,status,casenumber, mediator_id FROM mediation_proposal 
+                    $mediation_sql = "SELECT person1,person2,email1,issues,status,casenumber, mediator_id FROM mediation_proposal 
                                       WHERE (email1='$userprofile' or email2='$userprofile')";
                     $mediation_result = $conn->query($mediation_sql);
 
@@ -277,6 +278,7 @@
                         echo "<td>" . $row['casenumber'] . "</td>";
                         echo "<td>" . $row['status'] . "</td>";
                         echo "<td>" . $row['mediator_id'] . "</td>";
+                        echo '<td><a href="mediation_details.php?email=' . $row['email1'] . '">Click</a></td>';
                         echo "</tr>";
                     }
                 ?>

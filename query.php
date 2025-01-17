@@ -114,7 +114,7 @@ if (isset($_POST['delete'])) {
     <link href="lib/animate/animate.min.css" rel="stylesheet">
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
@@ -211,6 +211,56 @@ if (isset($_POST['delete'])) {
                 width: 90%;
             }
         }
+        /* Style for the Like and Comment buttons side by side */
+.like-comment-section {
+    display: flex;
+    justify-content: space-between; /* Space out like and comment */
+    align-items: center; /* Vertically align the items */
+    gap: 10px; /* Add some space between the buttons */
+    margin-top: 10px;
+}
+
+.like-btn {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.like-btn i {
+    margin-right: 5px; /* Space between the icon and text */
+}
+
+.comment-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 6px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+.comment-form button {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+}
+
+.comment-form button:hover {
+    background-color: #5a6268;
+}
+
     </style>
     
 
@@ -307,44 +357,55 @@ if (isset($_POST['delete'])) {
             </div>
         </div>
         <div class="col-lg-8">
-                                            <?php
-                                              
-                                              // SQL query to fetch events
-                                              $sql = "SELECT u.profilepic,c.id, c.email, c.fullname, c.description, c.file, c.date
-                                                            FROM community AS c
-                                                            JOIN user AS u ON u.email = c.email
-                                                            ORDER BY  id DESC; ";
-                                              $result = $conn->query($sql);
-                      
-                                              if ($result->num_rows > 0) {
-                                               
-                                                    // Loop through the results and display each event
-                                                  // Inside the while loop where you display the posts
-                                                  while ($row = $result->fetch_assoc()) {
-                                                   
-                                                        echo '<div class="post-card p-2">
-                                                                <div class="card-body">
-                                                                    <div class="user-info">
-                                                                        <img src="' . $row["profilepic"] . '" alt="Avatar" class="user-avatar">
-                                                                        <strong>' . $row["fullname"] . '</strong>
-                                                                    </div>
-                                                                    <p class="post-time">' . $row["date"] . '</p>
-                                                                    <img src="' . $row["file"] . '" alt="Post Image" class="post-image">
-                                                                    <p class="post-content">' . $row["description"] . '</p>
-                                                                </div>
-                                                            </div>';
-                                                    
-                                                }
-                                                
- 
-                                                
-                                                  
-                                              } else {
-                                                  echo "No events found";
-                                              }
-                      
-                                              mysqli_close($conn);  
-                                            ?>            
+            <?php
+                // Example of fetching data from the database
+                $sql = "SELECT u.profilepic, c.id, c.email, c.fullname, c.description, c.file, c.date,
+                        (SELECT COUNT(*) FROM likes WHERE post_id = c.id) AS like_count,
+                        (SELECT COUNT(*) FROM comments WHERE post_id = c.id) AS comment_count
+                        FROM community AS c
+                        JOIN user AS u ON u.email = c.email
+                        ORDER BY c.id DESC";
+                $result = $conn->query($sql);
+
+                // Check if the result has rows
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        // Output the post content and links to comment and like
+                        echo '<div class="post-card p-2">
+                                <div class="card-body">
+                                    <div class="user-info">
+                                        <img src="' . $row["profilepic"] . '" alt="Avatar" class="user-avatar">
+                                        <strong>' . $row["fullname"] . '</strong>
+                                    </div>
+                                    <p class="post-time">' . $row["date"] . '</p>
+                                    <p class="post-content">' . htmlspecialchars($row["description"]) . '</p>
+                                    <img src="' . $row["file"] . '" alt="Post Image" class="post-image">
+                                    <p style="margin-top:7px; ">Likes: ' . $row["like_count"] . ' | 
+                                    <a href="show_comments.php?post_id=' . $row['id'] . '">  Comments:</a> ' . $row["comment_count"] . '
+                                    </p>
+                                    <div class="like-comment-section">
+                                        <form action="like_post.php" method="POST" class="like-form">
+                                            <input type="hidden" name="post_id" value="' . $row["id"] . '">
+                                            <button type="submit" class="btn btn-primary like-btn">
+                                                <i class="fa fa-thumbs-up"></i> Like
+                                            </button>
+                                        </form>
+
+                                        <!-- Comment Section -->
+                                        <form action="comment_post.php" method="POST" class="comment-form">
+                                            <input type="hidden" name="post_id" value="' . $row["id"] . '">
+                                            <textarea name="comment_text" placeholder="Write a comment..." required></textarea>
+                                            <button type="submit" class="btn btn-secondary">Comment</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>';
+                    }
+                } else {
+                    echo "No posts found.";
+                }
+            ?>
+
                       
         </div>
     </div>

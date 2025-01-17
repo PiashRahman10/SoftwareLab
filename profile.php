@@ -182,7 +182,7 @@ $conn->close();
     <div class="container light-style flex-grow-1 container-p-y">
         <h4 class=""></h4>
         <div class="row">
-            <div class="col-lg-3 " style="position:fixed">
+            <div class="col-lg-3  " style="position:fixed">
                 <?php include("Profile_side_nabbar.php"); ?>
             </div>
 
