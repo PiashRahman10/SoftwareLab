@@ -19,6 +19,8 @@
             <div class="nav-link">
                 <ul>
                 <li><a href="mediator_dashboard.php">Home</a></li>
+                <li><a href="mediator_note.php">My Note</a></li>
+                <li><a href="mediator_edit_note.php">Edit Note</a></li>
                 <li><a href="mediator_activity.php">Activity</a></li>
                 <li><a href="mediator_profile.php">Profile</a></li>
             
