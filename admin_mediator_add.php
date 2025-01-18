@@ -9,6 +9,7 @@ if (isset($_POST['submit'])) {
     $qualification = $_POST['qualification'];
     $profession = $_POST['profession'];
     $status = $_POST['status'];
+    $password = $_POST['password'];
 
     // Handling file upload
     $pic = $_FILES['pic']['name'];
@@ -37,16 +38,40 @@ if (isset($_POST['submit'])) {
         $sql = "SELECT * FROM mediator WHERE email='$email'";
         $result = $conn->query($sql);
 
-        if ($result->num_rows > 0) {
+        //check if the email already exist in user registration table
+        $sql2 = "SELECT* From user WHERE email='$email' "; 
+        $result2 = $conn->query($sql2);
+        
+        /*
+           // $email = $_POST['cl_email'];
+    
+
+if ($result2->num_rows > 0) {
+    echo '<script>
+    window.location.href="admin_mediator.php"; 
+    alert("This user already exist. Enter another email")
+    </script>'; 
+} else {
+    $sqlwrite = "INSERT INTO user(fullname, email,password,phone,profilepic,status) values ('$fullname', '$email', '$password','$PhoneNumber','default_user.png','mediator')";
+       mysqli_query($conn, $sqlwrite);
+
+}
+        */
+        //
+        if ($result->num_rows > 0 && $result2->num_rows > 0) {
             echo '<script>
                 alert("This user already exists. Enter another email.");
                 window.location.href="admin_mediator.php";
             </script>';
         } else {
-            // Insert into database
+            // Insert into database into madiator table
             $insert_sql = "INSERT INTO mediator (name, email, phone, experience, qualification, profession, status, pic) 
                            VALUES ('$name', '$email', '$phone', '$experience', '$qualification', '$profession', '$status', '$pic')";
-            if ($conn->query($insert_sql) === TRUE) {
+
+            // Insert into database into user table
+            $sqlwrite = "INSERT INTO user(fullname, email,password,phone,profilepic,status) values ('$name', '$email',
+             '$password','$phone','$pic','mediator')";
+            if ($conn->query($insert_sql) === TRUE && $conn->query($sqlwrite) === TRUE ) {
                 header("Location: admin.php");
             } else {
                 echo '<script>alert("Error: ' . $conn->error . '");</script>';
@@ -136,6 +161,9 @@ if (isset($_POST['submit'])) {
 
                     <label for="status">Status</label>
                     <input type="text" name="status" class="form-control" required>
+
+                    <label for="status">Password</label>
+                    <input type="text" name="password" class="form-control" required>
 
                     <label for="pic">Picture</label>
                     <input type="file" name="pic" class="form-control" required>
