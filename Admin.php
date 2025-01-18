@@ -22,6 +22,16 @@
         <h1> Our Mediation Service</h1>
         <p>description if needed</p>
         <div class="row">
+
+        <div class="facilities-col">
+                <a href="admin_mediator_schedule.php">
+                    <img src="mediationProposal.jpg" alt="">
+                <h3>Mediator Schedule</h3>
+                <p>have to write small paragraph</p>
+                </a>
+                
+            </div>
+
             <div class="facilities-col">
                 <a href="medFormcheck.php">
                     <img src="mediationForm.jpg" alt="">
