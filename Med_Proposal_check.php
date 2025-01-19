@@ -6,8 +6,73 @@ require 'phpmailer/Exception.php';
 
 // Define namespaces
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+
+include("db.php");
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['accept'])) {
+        $casenumber = $_POST['accept']; // Accept button value
+        $mediator_id = $_POST['mediator_id'];
+        $link = $_POST['link'];
+        $feedback = $_POST['feedback'];
+
+        // Validate fields
+        if (!empty($mediator_id) && !empty($link) && !empty($feedback)) {
+            // Update the mediation_proposal table for accepted proposals
+            $update_sql = "UPDATE mediation_proposal 
+                           SET status = 'waiting', link = ?, mediator_id = ?, feedback = ? 
+                           WHERE casenumber = ?";
+            $stmt = $conn->prepare($update_sql);
+            $stmt->bind_param("sssi", $link, $mediator_id, $feedback, $casenumber);
+
+            if ($stmt->execute()) {
+                // Send email notification
+                $mail = new PHPMailer();
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+                $mail->Username = 'dbmsprojectalfha@gmail.com';
+                $mail->Password = 'zofk eqxk oqvy xnpu';
+                $mail->setFrom('dbmsprojectalfha@gmail.com', 'Alliance');
+                $mail->isHTML(true);
+                $mail->Subject = 'Mediation Consultancy Link';
+                $mail->Body = 'Mediation Link: ' . $link . '<br>Mediator ID: ' . $mediator_id;
+                $mail->addAddress($_POST['email1']); // Assuming email1 is part of the form submission
+                $mail->send();
+            } else {
+                echo "<script>alert('Error updating the database for acceptance.');</script>";
+            }
+        } else {
+            echo "<script>alert('All fields are required for acceptance.');</script>";
+        }
+    }
+
+    if (isset($_POST['reject'])) {
+        $casenumber = $_POST['reject']; // Reject button value
+        $feedback = $_POST['feedback'];
+
+        // Validate feedback
+        if (!empty($feedback)) {
+            // Update the mediation_proposal table for rejected proposals
+            $update_sql = "UPDATE mediation_proposal 
+                           SET status = 'no', feedback = ? 
+                           WHERE casenumber = ?";
+            $stmt = $conn->prepare($update_sql);
+            $stmt->bind_param("si", $feedback, $casenumber);
+
+            if ($stmt->execute()) {
+                echo "<script>alert('Proposal rejected successfully.');</script>";
+            } else {
+                echo "<script>alert('Error updating the database for rejection.');</script>";
+            }
+        } else {
+            echo "<script>alert('Feedback is required for rejection.');</script>";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +81,6 @@ use PHPMailer\PHPMailer\Exception;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mediation Verification</title>
-
     <style>
         /* Resetting styles */
         * {
@@ -164,7 +228,6 @@ use PHPMailer\PHPMailer\Exception;
 <body>
 <section class="header">
     <?php include("admin_navbar.php"); ?>
-    
     <div class="text-box">
         <h1>Mediation Case File Proposal</h1>
     </div>
@@ -182,52 +245,6 @@ use PHPMailer\PHPMailer\Exception;
                 <th>Action</th>
             </tr>
             <?php
-            include("db.php");
-
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                if (isset($_POST['accept'])) {
-                    $email1 = $_POST['accept'];
-                    $mediator_id = $_POST['mediator_id'];
-                    $link = $_POST['link'];
-                    $feedback = $_POST['feedback'];
-
-                    $update_sql = "UPDATE mediation_proposal 
-                                   SET status='done', link='$link', mediator_id='$mediator_id', feedback='$feedback' 
-                                   WHERE email1='$email1'";
-                    $conn->query($update_sql);
-
-                    $mail = new PHPMailer();
-                    $mail->isSMTP();
-                    $mail->Host = 'smtp.gmail.com';
-                    $mail->SMTPAuth = true;
-                    $mail->SMTPSecure = 'tls';
-                    $mail->Port = 587;
-                    $mail->Username = 'dbmsprojectalfha@gmail.com';
-                    $mail->Password = 'zofk eqxk oqvy xnpu';
-                    $mail->setFrom('dbmsprojectalfha@gmail.com', 'Alliance');
-                    $mail->isHTML(true);
-                    $mail->Subject = 'Mediation Consultancy Link';
-                    $mail->Body = 'Mediation Link: ' . $link . '<br>Mediator ID: ' . $mediator_id;
-                    $mail->addCC($email1);
-                    $mail->send();
-                }
-
-                if (isset($_POST['reject'])) {
-                    $email1 = $_POST['reject'];
-                    $feedback = $_POST['feedback'];
-
-                    $update_sql = "UPDATE mediation_proposal 
-                                   SET status='no', feedback='$feedback' 
-                                   WHERE email1='$email1'";
-                    $conn->query($update_sql);
-                }
-            }
-
-            // $sql = "SELECT mec.casenumber, mep.email1, mep.email2, mep.date, mep.issues 
-            //         FROM mediation_proposal AS mep 
-            //         JOIN mediation_case AS mec ON mec.casenumber = mep.casenumber 
-            //         WHERE mep.status ='pending'";
-            // $result = $conn->query($sql);
             $sql = "SELECT * FROM mediation_proposal WHERE status ='pending'";
             $result = $conn->query($sql);
 
@@ -243,6 +260,7 @@ use PHPMailer\PHPMailer\Exception;
                             <textarea name='feedback' placeholder='Enter feedback...' required></textarea>
                             <input type='text' name='mediator_id' placeholder='Mediator ID'>
                             <input type='text' name='link' placeholder='Meet link'>
+                            <input type='hidden' name='email1' value='" . $row['email1'] . "'>
                             <button type='submit' class='accept-btn' name='accept' value='" . $row['casenumber'] . "'>Accept</button>
                             <button type='submit' class='reject-btn' name='reject' value='" . $row['casenumber'] . "'>Reject</button>
                         </form>

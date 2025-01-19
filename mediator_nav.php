@@ -21,7 +21,7 @@
                 <li><a href="mediator_dashboard.php">Home</a></li>
                 <li><a href="mediator_note.php">My Note</a></li>
                 <li><a href="mediator_edit_note.php">Edit Note</a></li>
-                <li><a href="mediator_activity.php">Activity</a></li>
+                <li><a href="mediator_current_case.php">Current Case</a></li>
                 <li><a href="mediator_profile.php">Profile</a></li>
             
                     <li><a href="logout.php">Logout</a></li>
