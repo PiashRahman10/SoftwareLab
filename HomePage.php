@@ -1,6 +1,86 @@
-<?php
 
-include("db.php");
+<!-- php code start -->
+
+<?php
+    include("db.php");
+  
+    $sql = "SELECT COUNT(*) AS total_count FROM arbitration_proposal";
+    $result = mysqli_query($conn, $sql);
+
+    // Check if query executed successfully
+    if($result) {
+        // Fetch the total count
+        $row = mysqli_fetch_assoc($result);
+        $total_count = $row['total_count'];
+    } else {
+        // Handle error if query fails
+        $total_count = "N/A";
+    }
+
+    $sql2 = "SELECT COUNT(*) AS total_count2 FROM mediation_proposal";
+    $result2 = mysqli_query($conn, $sql2);
+
+    // Check if query executed successfully
+    if($result2) {
+        // Fetch the total count
+        $row = mysqli_fetch_assoc($result2);
+        $total_count2 = $row['total_count2'];
+    } else {
+        // Handle error if query fails
+        $total_count2 = "N/A";
+    }
+    //totalcase
+    $totalcase= $total_count+$total_count2;
+
+    //pending case arbitration
+    $sql3 = "SELECT COUNT(*) AS total_count FROM arbitration_proposal WHERE status='pending'";
+    $result3 = mysqli_query($conn, $sql3);
+
+    // Check if query executed successfully
+    if($result3) {
+        // Fetch the total count
+        $row = mysqli_fetch_assoc($result3);
+        $total_count3 = $row['total_count'];
+    } else {
+        // Handle error if query fails
+        $total_count3 = "N/A";
+    }
+
+    //pending case mediation
+
+    $sql4 = "SELECT COUNT(*) AS total_count FROM mediation_proposal WHERE status='pending'";
+    $result4 = mysqli_query($conn, $sql4);
+
+    // Check if query executed successfully
+    if($result4) {
+        // Fetch the total count
+        $row = mysqli_fetch_assoc($result4);
+        $total_count4 = $row['total_count'];
+    } else {
+        // Handle error if query fails
+        $total_count4 = "N/A";
+    }
+    $pendingcase= $total_count3 + $total_count4;
+
+    //solved case
+
+    $solvecase = $totalcase - $pendingcase;
+
+    $queryL= "SELECT u.profilepic as pp,c.email,l.full_name as fullname,l.catagory as catagory,l.court as court ,l.lawyer_id as lawyer_id,count(*)
+                FROM 
+                user AS u 
+                    JOIN
+                    comment_box AS c
+                    ON (c.email=u.email)
+                    JOIN lawyer as l
+                    ON (u.email=l.email)
+            
+                    WHERE u.status='lawyer'
+                    GROUP BY c.email
+                    ORDER BY COUNT(*) DESC
+                    limit 4";
+                $resultL = mysqli_query($conn, $queryL)
+
 
 ?>
 
@@ -114,4 +194,238 @@ include("db.php");
         <a href="lawyer_registration.php" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Register<i class="fa fa-arrow-right ms-3"></i><br>as lawyer</a>
     </div>
 </nav>
+
+
+    <!-- Navbar End -->
+    <style>
+    .page-header {
+    background: url("header-page.jpg") top center no-repeat;
+    background-size: cover;
+    text-shadow: 0 0 30px rgba(0, 0, 0, .1);
+}
+</style>
+
+    <!-- Header Start -->
+    <div class="container-fluid header bg-primary p-0 mb-5">
+        <div class="row g-0 align-items-center flex-column-reverse flex-lg-row">
+            <div class="col-lg-6 p-5 wow fadeIn" data-wow-delay="0.1s">
+                <h1 class="display-4 text-white mb-5">We provide high quality law advice and support.</h1>
+                <div class="row g-4">
+                    <div class="col-sm-4">
+                        <div class="border-start border-light ps-4">
+                            <h2 class="text-white mb-1" data-toggle="counter-up"><?php echo $totalcase;  ?></h2>
+                            <p class="text-light mb-0">Total Case</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="border-start border-light ps-4">
+                            <h2 class="text-white mb-1" data-toggle="counter-up"><?php echo $solvecase;  ?></h2>
+                            <p class="text-light mb-0">Solved Case</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="border-start border-light ps-4">
+                            <h2 class="text-white mb-1" data-toggle="counter-up"><?php echo $pendingcase;  ?></h2>
+                            <p class="text-light mb-0">Pending Case</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                <div class="owl-carousel header-carousel">
+                    <div class="owl-carousel-item position-relative">
+                        <img class="img-fluid" src="img/home-1.png" alt="">
+                        <div class="owl-carousel-text">
+                            <h1 class="display-1 text-white mb-0">Justice</h1>
+                        </div>
+                    </div>
+                    <div class="owl-carousel-item position-relative">
+                        <img class="img-fluid" src="img/home-2.png" alt="">
+                        <div class="owl-carousel-text">
+                            <h1 class="display-1 text-white mb-0"></h1>
+                        </div>
+                    </div>
+                    <div class="owl-carousel-item position-relative">
+                        <img class="img-fluid" src="img/home-3.png" alt="">
+                        <div class="owl-carousel-text">
+                            <h1 class="display-1 text-white mb-0">Lawyers</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="d-flex flex-column">
+                        <img class="img-fluid rounded w-75 align-self-end" src="img/about-1.png" alt="">
+                        <img class="img-fluid rounded w-50 bg-white pt-3 pe-3" src="img/about-2.png" alt="" style="margin-top: -25%;">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <p class="d-inline-block border rounded-pill py-1 px-4">About Us</p>
+                    <h1 class="mb-4">Why You Should Trust Us? Get Know About Us!</h1>
+                    <p>Our agenda is to create awareness of law and we are also trying to reduce the pending cases in court.
+                         We want to give an opportunity to people to lead a peaceful and problem-free life</p>
+                    <p class="mb-4">Alliance Consultancy Firm is a well recognize law firm in Bangladesh.
+                         Our law firm is a registered body and all of our lawyer, arbitrator, mediator and stuffs are well trained and qualified. 
+                         We have been serving so many well known companies of our country like Beximco, Bashundhara group,
+                          Bangladesh Biman and SA group with due diligence. 
+                        We also have partnership with many national and international law firms and companies. </p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Quality Service</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Only Qualified Lawyers</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Discussion With Lawyers In Querry Box</p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+
+    <!-- Feature Start -->
+    <div class="container-fluid bg-primary overflow-hidden my-5 px-lg-0">
+        <div class="container feature px-lg-0">
+            <div class="row g-0 mx-lg-0">
+                <div class="col-lg-6 feature-text py-5 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="p-lg-5 ps-lg-0">
+                        <p class="d-inline-block border rounded-pill text-light py-1 px-4">Features</p>
+                        <h1 class="text-white mb-4">Why Choose Us</h1>
+                        <p class="text-white mb-4 pb-2">Alliance Consultancy Firm is a well respected law firm in Bangladesh.
+                             We provide highly qualified lawyers and arbitators who have been practicing in the supreme court of Bangladesh for long time.
+                             We also provide qualified and experienced mediators. They have vast knowledge in their practicing area. Moreover,
+                              our lawyers success rate is over 85% and the success rate of our arbitrators and mediators over 80%.</p>
+                        <div class="row g-4">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
+                                        <i class="fa fa-user text-primary"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="text-white mb-2">Experience</p>
+                                        <h5 class="text-white mb-0">Legal Advisors</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
+                                        <i class="fa fa-check text-primary"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="text-white mb-2">Quality</p>
+                                        <h5 class="text-white mb-0">Services</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
+                                        <i class="fa fa-comment-medical text-primary"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="text-white mb-2">Positive</p>
+                                        <h5 class="text-white mb-0">Consultation</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
+                                        <i class="fa fa-headphones text-primary"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="text-white mb-2">24 Hours</p>
+                                        <h5 class="text-white mb-0">Support</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 pe-lg-0 wow fadeIn" data-wow-delay="0.5s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute img-fluid w-100 h-100" src="img/feature.png" style="object-fit: cover;" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Feature End -->
+
+
+    <!-- Team Start -->
+    <div class="container-xxl py-5">
+        <?php
+            
+
+
+        ?>
+        <div class="container">
+            <div class="text-center mx-auto mb-5">
+                <p class="d-inline-block border rounded-pill py-1 px-4">Lawyers</p>
+                <h1>Our Most Active Lawyers</h1>
+            </div>
+
+            <!-- Lawyer cards -->
+            <div class="row g-4">
+            <style>
+                /* Custom animation for lawyer cards */
+                .lawyer-card {
+                    position: relative;
+                    overflow: hidden;
+                    transition: transform 0.4s ease, box-shadow 0.4s ease;
+                }
+                .lawyer-card:hover {
+                    transform: translateY(-10px);
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+                }
+
+                /* Increase circle size, border, and padding for images */
+                .lawyer-image {
+                    width: 200px;
+                    height: 200px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    border: 5px solid #007bff;
+                    padding: 7px;
+                }
+            </style>
+                <?php
+                
+                // Check if there are lawyers in the result
+                if (mysqli_num_rows($resultL) > 0) {
+                    while ($lawyer = mysqli_fetch_assoc($resultL)) {
+                        ?>
+                        <div class="col-lg-3 col-md-6 wow fadeInUp lawyer-card" data-wow-delay="0.2s">
+                            <div class="card border-0 shadow-sm h-100 text-center p-4">
+                                <div class="card-body">
+                                    <!-- Add image in the card with larger circle, border, and padding -->
+                                    <?php echo "<img class='img-fluid rounded-circle mb-4 lawyer-image' src='".$lawyer['pp']."'>"; ?>
+                                    <h6 class="card-title text-black"><?php echo htmlspecialchars($lawyer['fullname']); ?></h6>
+                                    <p class="card-text text-black">Category: <?php echo htmlspecialchars($lawyer['catagory']); ?></p>
+                                    <p class="card-text">Court: <?php echo htmlspecialchars($lawyer['court']); ?></p>
+                                    
+                                    <a href="appointment.php?lawyer_id=<?php echo htmlspecialchars($lawyer['lawyer_id']); ?>" class="btn btn-primary rounded-pill">Book Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    echo "<p class='text-center'>No lawyers found.</p>";
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+    
+
 </body>
