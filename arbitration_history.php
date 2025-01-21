@@ -329,7 +329,7 @@
                         <th>Case Number</th>
                         <th>Online Status</th>
                         <th> Arbitrator ID</th>
-                        <th> Details </th>
+                        <th> Meet Link </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -346,7 +346,7 @@
                         echo "<td>" . $row['casenumber'] . "</td>";
                         echo "<td>" . $row['status'] . "</td>";
                         echo "<td>" . $row['arbitrator_id'] . "</td>";
-                        echo '<td><a href="arbitration_details.php?email=' . $row['email1'] . '">Click</a></td>';
+                        echo "<td>" . $row['link'] . "</td>";
                         echo "</tr>";
                     }
                 ?>

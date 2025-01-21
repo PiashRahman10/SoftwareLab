@@ -5,6 +5,7 @@ $dbuser = 'root';
 $dbpass = '';
 $dbname = 'adr';
 $conn = mysqli_connect($host, $dbuser, $dbpass, $dbname);
+
 if (!isset($_SESSION['useremail'])) {
     header('Location: login.php'); // Redirect to login if not logged in
     exit();

@@ -261,26 +261,27 @@
                         <th>Case Number</th>
                         <th>Online Status</th>
                         <th>Mediator ID</th>
-                        <th>Details </th>
+                        <th>Meet Link </th>
                     </tr>
                 </thead>
                 <tbody>
                 <?php
-                    $mediation_sql = "SELECT person1,person2,email1,issues,status,casenumber, mediator_id FROM mediation_proposal 
+                    $mediation_sql = "SELECT person1,person2,email1,issues,status,casenumber, mediator_id,link FROM mediation_proposal 
                                       WHERE (email1='$userprofile' or email2='$userprofile')";
                     $mediation_result = $conn->query($mediation_sql);
 
                     while ($row = $mediation_result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . $row['person1'] . "</td>";
-                        echo "<td>" . $row['person2'] . "</td>";
-                        echo "<td>" . $row['issues'] . "</td>";
-                        echo "<td>" . $row['casenumber'] . "</td>";
-                        echo "<td>" . $row['status'] . "</td>";
-                        echo "<td>" . $row['mediator_id'] . "</td>";
-                        echo '<td><a href="mediation_details.php?email=' . $row['email1'] . '">Click</a></td>';
+                        echo "<td>" . htmlspecialchars($row['person1']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['person2']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['issues']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['casenumber']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['status']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['mediator_id']) . "</td>";
+                        echo "<td><a href='" . htmlspecialchars($row['link']) . "' target='_blank'>View Link</a></td>";
                         echo "</tr>";
                     }
+                    
                 ?>
                 </tbody>
             </table>

@@ -82,6 +82,19 @@
             transition: background-color 0.3s ease;
         }
 
+        .view-link {
+            padding: 10px 15px;
+            background-color:rgb(54, 136, 244);
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none; 
+        } 
+       
+
         .reject-btn:hover {
             background-color: #e03131;
         }
@@ -159,20 +172,24 @@
                             WHERE ap.status ='pending' ORDER BY ac.casenumber;";
                     $result = $conn->query($sql);
 
-                    // Output data of each row
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>".$row['casenumber']."</td>";
-                        echo "<td>".$row['fullname']."</td>";
-                        echo "<td>".$row['email']."</td>";
-                        echo "<td>".$row['phone']."</td>";
-                        echo "<td>
-                                <form method='post'>
-                                    <button type='submit' class='reject-btn' name='reject' value='".$row['casenumber']."'>Remove</button>
-                                </form>
-                              </td>";
-                        echo "</tr>";
-                    }
+                   // Output data of each row
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>".$row['casenumber']."</td>";
+                            echo "<td>".$row['fullname']."</td>";
+                            echo "<td>".$row['email']."</td>";
+                            echo "<td>".$row['phone']."</td>";
+                            echo "<td>
+                                    <form method='post' style='display: inline-block;'>
+                                        <button type='submit' class='reject-btn' name='reject' value='".$row['casenumber']."'>Remove</button>
+                                    </form>
+                                    
+                                    <a href='arb_form_view.php?email=".$row['email']."&casenumber=".$row['casenumber']."' class='view-link'>Details</a>
+
+                                </td>";
+                            echo "</tr>";
+                        }
+
                     $conn->close();
                 ?>
                 <!-- End of PHP code -->

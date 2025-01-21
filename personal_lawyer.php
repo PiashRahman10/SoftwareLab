@@ -275,7 +275,8 @@
                                    FROM lawyer AS l
                                    JOIN appointment AS a
                                    ON l.lawyer_id = a.lawyer_id
-                                   JOIN user AS u ON a.user_email=u.email
+                                   JOIN user AS u 
+                                   ON a.user_email=u.email
                                    WHERE l.email='$a' OR a.user_email='$a'";
                     $lawyer_result = $conn->query($lawyer_sql);
 
