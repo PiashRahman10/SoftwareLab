@@ -100,6 +100,7 @@ $result = mysqli_query($conn, $query);
                         $name = $row['name'];
                         $email = $row['email'];
                         $phone = $row['phone'];
+                        $id = $row['id'];
                         $image = 'medpic/' . $row['pic'];
                         $profession = $row['profession'];
                         $freeTime = $row['free'];
@@ -110,6 +111,7 @@ $result = mysqli_query($conn, $query);
                                     <img class="lawyer-image img-fluid" src="<?php echo $image; ?>" alt="<?php echo $name; ?>">
                                 </div>
                                 <div class="p-4">
+                                <small><b>Mediator ID : <?php echo $id; ?></b></small><br>
                                     <h5 class="mb-0"><?php echo $name; ?></h5>
                                     <small><?php echo $email; ?></small><br>
                                     <small><?php echo $phone; ?></small><br>
