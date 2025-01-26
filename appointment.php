@@ -244,7 +244,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                 <!-- <div class="bg-light rounded p-5 d-flex"> -->
                         
                     </div>
-                <!-- </div> -->
+                
     </div>
         <div class="container">
             <div class="row g-5">

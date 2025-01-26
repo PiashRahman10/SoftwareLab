@@ -129,7 +129,7 @@ $result = mysqli_query($conn, $query);
             
             <a href="mediator.php" class="nav-item nav-link active">Mediator</a>
             <a href="arbitrator.php" class="nav-item nav-link ">Arbitrator</a>
-            <a href="querry.php" class="nav-item nav-link">Query</a>
+            <a href="query.php" class="nav-item nav-link">Query</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Service</a>
                 <div class="dropdown-menu rounded-0 rounded-bottom m-0">
