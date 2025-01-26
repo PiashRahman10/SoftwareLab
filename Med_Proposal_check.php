@@ -145,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .reject-btn {
             padding: 10px 15px;
             margin-right: 5px;
+            margin-top: 5px;
             background-color: #4CAF50;
             border: none;
             color: white;
@@ -226,6 +227,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
 </head>
 <body>
+    <style>
+        .btn a{
+            color : white;
+            text-decoration: none;
+        }
+        .btn {
+            padding: 10px 15px;
+            margin-right: 5px;
+            margin-top: 5px;
+            background-color: purple;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    </style>
 <section class="header">
     <?php include("admin_navbar.php"); ?>
     <div class="text-box">
@@ -263,12 +283,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <input type='hidden' name='email1' value='" . $row['email1'] . "'>
                             <button type='submit' class='accept-btn' name='accept' value='" . $row['casenumber'] . "'>Accept</button>
                             <button type='submit' class='reject-btn' name='reject' value='" . $row['casenumber'] . "'>Reject</button>
+                            <button class='btn'><a href='admin_mediator_schedule.php'>Mediator</a></button>
                         </form>
                       </td>";
                 echo "</tr>";
             }
             $conn->close();
             ?>
+            
         </table>
     </div>
 </div>
